@@ -10,7 +10,7 @@ Please read the instructions carefully and submit your solution before the deadl
 - [Rules and Guidelines](#rules-and-guidelines)
 - [Qualifier Assignment](#qualifier-assignment)
   - [Basic Requirements](#basic-requirements)
-  - [Intermediate Requirements](#advanced-requirements)
+  - [Intermediate Requirements](#intermediate-requirements)
   - [Advanced Requirements](#advanced-requirements)
 - [Test Suite](#test-suite)
   - [Running the Test Suite](#running-the-test-suite)
@@ -19,7 +19,7 @@ Please read the instructions carefully and submit your solution before the deadl
 The qualifier assignment has three sections of increasing difficulty:
 
 1. [Basic Requirements](#basic-requirements)
-2. [Intermediate Requirements](#advanced-requirements)
+2. [Intermediate Requirements](#intermediate-requirements)
 3. [Advanced Requirements](#advanced-requirements)
 
 To qualify for the Code Jam, your solution has to **pass the basic requirements**. However, we urge you to at least try the intermediate and/or advanced requirements if you think you can tackle them. We will publish our solution for the qualifier after the deadline has passed.
