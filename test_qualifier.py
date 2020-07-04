@@ -1,5 +1,6 @@
 import datetime
 import importlib
+import re
 import unittest
 from unittest import mock
 
@@ -31,7 +32,8 @@ class T100BasicTests(unittest.TestCase):
                     hasattr(self.article, attribute),
                     msg=f"The Article instance has no `{attribute}` attribute"
                 )
-                self.assertEqual(getattr(self, attribute), getattr(self.article, attribute))
+                self.assertEqual(getattr(self, attribute),
+                                 getattr(self.article, attribute))
 
     def test_102_repr(self):
         """The repr should be in a specific format, which includes the title, author, and date."""
@@ -44,14 +46,16 @@ class T100BasicTests(unittest.TestCase):
 
     def test_103_len(self):
         """Using len(article) should return the article's content's length."""
-        self.assertTrue(hasattr(self.article, "__len__"), msg="Article has no `__len__` method.")
+        self.assertTrue(hasattr(self.article, "__len__"),
+                        msg="Article has no `__len__` method.")
         self.assertEqual(len(self.article.content), len(self.article))
 
     def test_104_short_introduction(self):
         """short_introduction should truncate at a space/newline to at most n_characters."""
         contents = (
             (self.content, "'But he has nothing", 20),
-            ("'I know I'm not stupid,' the man thought,", "'I know I'm not stupid,' the", 31),
+            ("'I know I'm not stupid,' the man thought,",
+             "'I know I'm not stupid,' the", 31),
             ("'Magnificent,' said the two officials already duped", "'Magnificent,'", 15),
             ("see anything.\nHis whole", "see anything.", 16),
         )
@@ -70,9 +74,11 @@ class T100BasicTests(unittest.TestCase):
     def test_105_most_common_words(self):
         """most_common_words should return a dictionary of the n_words most common words."""
         contents = (
-            (self.content, {"at": 2, "all": 2, "but": 1, "he": 1, "has": 1}, 5),
+            (self.content, {"at": 2, "all": 2,
+                            "but": 1, "he": 1, "has": 1}, 5),
             ("'I know I'm not stupid,'", {"i": 2, "know": 1, "m": 1}, 3),
-            ("'Magnificent,' said the two officials", {"magnificent": 1, "said": 1}, 2),
+            ("'Magnificent,' said the two officials",
+             {"magnificent": 1, "said": 1}, 2),
             ("of his.\nHis whole", {"his": 2, "of": 1}, 2),
             ("Am I a fool?", {}, 0),
             ("All the town",  {"all": 1, "the": 1, "town": 1}, 9372)
@@ -100,20 +106,21 @@ class T200IntermediateTests(unittest.TestCase):
 
         for _ in range(5):
             article = qualifier.Article(
-                title="a", author="b", content="c", publication_date=mock.Mock()
+                title="a", author="b", content="c", publication_date=mock.Mock(datetime.datetime)
             )
             articles.append(article)
 
         # Assert in a separate loop to ensure that new articles didn't affect previous IDs.
         for expected_id, article in enumerate(articles):
-            self.assertTrue(hasattr(article, "id"), msg="`Article` object has no `id` attribute")
+            self.assertTrue(hasattr(article, "id"),
+                            msg="`Article` object has no `id` attribute")
             self.assertEqual(expected_id, article.id)
 
     @mock.patch("qualifier.datetime")
     def test_202_last_edited(self, local_datetime):
         """last_edited attribute should update to the current time when the content changes."""
         article = qualifier.Article(
-            title="a", author="b", content="c", publication_date=mock.Mock()
+            title="a", author="b", content="c", publication_date=mock.Mock(datetime.datetime)
         )
 
         self.assertTrue(
@@ -121,10 +128,14 @@ class T200IntermediateTests(unittest.TestCase):
             msg="`Article` object has no `last_edited` attribute"
         )
 
-        self.assertIsNone(article.last_edited, "Initial value of last_edited should be None")
+        self.assertIsNone(article.last_edited,
+                          "Initial value of last_edited should be None")
 
         # Set twice to account for both "import datetime" and "from datetime import datetime"
-        side_effects = ("first datetime", "second datetime")
+        side_effects = (
+            datetime.datetime(2020, 7, 2, 15, 3, 10),
+            datetime.datetime(2020, 7, 2, 16, 3, 10),
+        )
         local_datetime.now.side_effect = side_effects
         local_datetime.datetime.now.side_effect = side_effects
 
@@ -138,10 +149,14 @@ class T200IntermediateTests(unittest.TestCase):
         """Articles should be inherently sortable by their publication date."""
         kwargs = {"title": "a", "author": "b", "content": "c"}
         articles = [
-            qualifier.Article(**kwargs, publication_date=datetime.datetime(2001, 7, 5)),
-            qualifier.Article(**kwargs, publication_date=datetime.datetime(1837, 4, 7)),
-            qualifier.Article(**kwargs, publication_date=datetime.datetime(2015, 8, 20)),
-            qualifier.Article(**kwargs, publication_date=datetime.datetime(1837, 4, 7)),
+            qualifier.Article(
+                **kwargs, publication_date=datetime.datetime(2001, 7, 5)),
+            qualifier.Article(
+                **kwargs, publication_date=datetime.datetime(1837, 4, 7)),
+            qualifier.Article(
+                **kwargs, publication_date=datetime.datetime(2015, 8, 20)),
+            qualifier.Article(
+                **kwargs, publication_date=datetime.datetime(1837, 4, 7)),
         ]
 
         expected = [articles[1], articles[3], articles[0], articles[2]]
@@ -200,22 +215,6 @@ class T300AdvancedTests(unittest.TestCase):
 
     def test_304_descriptor_type_error_message(self):
         """Should include the attribute's name, the expected type, and the received type."""
-        with self.assertRaises(TypeError) as assertion_context:
+        msg = "expected an instance of type 'int' for attribute 'attribute', got 'str' instead"
+        with self.assertRaisesRegex(TypeError, re.escape(msg)):
             self.article.attribute = "some string"
-
-        exception_message = str(assertion_context.exception)
-        self.assertIn(
-            "int",
-            exception_message,
-            msg="The exception message should include the expected type",
-        )
-        self.assertIn(
-            "attribute",
-            exception_message,
-            msg="The exception message should include the name of the attribute",
-        )
-        self.assertIn(
-            "str",
-            exception_message,
-            msg="The exception message should include the received type",
-        )
