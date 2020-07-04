@@ -2,7 +2,10 @@
 
 To qualify for the upcoming Summer Code Jam, you'll have to complete a qualifier assignment. For the assignment, you'll have to write an `Article` class that could be used to represent an article published on a website.
 
-Please read the instructions carefully and submit your solution before the deadline using the sign-up form. Also, note that **we've included a test suite** you can use to test your solution before you submit it.
+Please read the instructions carefully and submit your solution before the deadline using the [sign-up form](https://forms.gle/RpGCrLXyn8U92c156). Also, note that **we've included a test suite** you can use to test your solution before you submit it.
+
+- **Deadline:** July 22, 2020  
+- **Sign-up form:** [https://forms.gle/RpGCrLXyn8U92c156](https://forms.gle/RpGCrLXyn8U92c156)
 
 ## Table of Contents
 
@@ -99,7 +102,7 @@ _The requirements listed in this section only apply to the `Article` class._
     {'the': 3, 'he': 2, 'at': 2}
     ```
    - Output the words in lowercase in the dictionary.
-   - Every non-alphabet character counts as a space or word break. For example, `"It's"` counts as two "words": `"it"` and `"s"`.
+   - Every non-alphabet (ASCII only) character counts as a space or word break. For example, `"It's"` counts as two "words": `"it"` and `"s"`.
 
 ### Intermediate Requirements
 
@@ -178,12 +181,12 @@ It's perfectly fine to have a look at the tests (see [test_qualifier.py](test_qu
 
 ### Running the Test Suite
 
-To run the test suite, first download the files [`test_qualifier.py`](test_qualifier.py) and [`run_test.py`](run_tests.py). Place these files in the same directory as the file containing your solution and **make sure the file containing your solution is called `qualifier.py`**. Then, open a terminal/command window and change the current directory to your solution's directory. Finally, run the following command:
+To run the test suite, first download the files [`test_qualifier.py`](test_qualifier.py) and [`run_tests.py`](run_tests.py). Place these files in the same directory as the file containing your solution and **make sure the file containing your solution is called `qualifier.py`**. Then, open a terminal/command window and change the current directory to your solution's directory. Finally, run the following command:
 
 ```
 python run_tests.py
 ```
 
-**Note:** You may have to replace `python` with the command you use to run Python from the command line. If you're using Windows and `python` doesn't work, try `py` instead.
+**Note:** You may have to replace `python` with the command you use to run Python from the command line. If you're using Windows and `python` doesn't work, try `py` instead. If you're using Linux, you may have to use `python3` instead.
 
-The test suite has been tested with Python 3.7 and Python 3.8.
+The test suite requires **at least Python 3.7**. It has also been confirmed to work with 3.8.
