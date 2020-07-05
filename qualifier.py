@@ -29,18 +29,41 @@ class ArticleField:
 
 class Article:
 	"""The `Article` class you need to write for the qualifier."""
+	
+	id_now = 0
+	last_edited = None
 
 	def __init__(self, title: str, author: str, publication_date: datetime.datetime, content: str):
 		self.title = title
 		self.author = author
 		self.publication_date = publication_date
-		self.content = content
+		self.my_content = content
+		self.id = Article.id_now
+		Article.id_now += 1
 
 	def __repr__(self):
 		return f"<Article title=\"{self.title}\" " + f"author='{self.author}' " + f"publication_date='{self.publication_date.isoformat()}'>"
 
 	def __len__(self):
-		return len(self.content)	
+		return len(self.my_content)	
+
+	def __lt__(self, other: object):
+		return self.publication_date < other.publication_date
+
+	def __gt__(self, other: object):
+		return self.publication_date > other.publication_date
+
+	def __eq__(self, other: object):
+		return self.publication_date == other.publication_date
+
+	@property
+	def content(self):
+		return self.my_content
+
+	@content.setter
+	def content(self, new_content: str):
+		self.my_content = new_content
+		self.last_edited = datetime.datetime.now()
 
 	def short_introduction(self, n_characters: int) -> str:
 		if n_characters >= len(self.content):
@@ -112,19 +135,4 @@ class Article:
 			value_target = value
 
 		return dict(zip(words_target, value_target))
-
-# For debug
-# if __name__ == "__main__":
-# 	title = 'THIS IS TITLE'
-# 	author = 'IQRAR'
-# 	publication_date = datetime.datetime(1837, 4, 7, 12, 15, 0)
-# 	content = "The requirements listed in this section only apply to the Article class. Please make sure the changes you make for the requirements this section don't break any of the requirements listed in the previous section."
-
-# 	article = Article(title, author, publication_date, content)
-# 	print(repr(article))
-# 	print(article.content)
-# 	print(len(article))
-# 	print(article.short_introduction(n_characters=8))
-# 	print(len(article.short_introduction(n_characters=8)))
-# 	print(article.most_common_words(6))
 
