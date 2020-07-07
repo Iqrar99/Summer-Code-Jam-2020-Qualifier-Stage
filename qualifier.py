@@ -21,17 +21,42 @@ import typing
 
 
 class ArticleField:
-    """The `ArticleField` class for the Advanced Requirements."""
+	"""The `ArticleField` class for the Advanced Requirements."""
 
-    def __init__(self, field_type: typing.Type[typing.Any]):
-        pass
+	field_type: typing.Type[typing.Any] 
 
+	def __init__(self, field_type: typing.Type[typing.Any]):
+		self.field_type = field_type
+
+	def __set_name__(self, owner, name):
+		self.name = name
+
+	def __set__(self, instance, value):
+		if isinstance(value, self.field_type):
+			instance.__dict__[self.name] = value
+		
+		else:
+			err_msg1 = self.field_type.__name__
+			err_msg2 = value.__class__.__name__
+			raise TypeError(
+				f"""expected an instance of type '{err_msg1}' for attribute '{self.name}', got '{err_msg2}' instead""")
+
+	def __get__(self, instance, owner):
+		return instance.__dict__.get(self.name)
+
+	def __str__(self):
+		return self.__data
 
 class Article:
 	"""The `Article` class you need to write for the qualifier."""
 	
 	id_now = 0
 	last_edited = None
+	
+	title = ArticleField(field_type=str)
+	author = ArticleField(field_type=str)
+	publication_date = ArticleField(field_type=datetime.datetime)
+	my_content = ArticleField(field_type=str)
 
 	def __init__(self, title: str, author: str, publication_date: datetime.datetime, content: str):
 		self.title = title
@@ -45,7 +70,7 @@ class Article:
 		return f"<Article title=\"{self.title}\" " + f"author='{self.author}' " + f"publication_date='{self.publication_date.isoformat()}'>"
 
 	def __len__(self):
-		return len(self.my_content)	
+		return len(self.my_content)
 
 	def __lt__(self, other: object):
 		return self.publication_date < other.publication_date
